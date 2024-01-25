@@ -46,10 +46,11 @@ app.get("/posts",(req,res) => {
 
 //GET a specific post by id
 app.get("/posts/:id",(req,res) => {
-  const id = parseInt(req.params.id);
-  const searchIndex = posts.findIndex((post) => post.id === id);
+  const searchIndex = posts.find((post) => post.id === parseInt(req.params.id));
   const resultPostById = posts[searchIndex];
-  
+  if (!resultPostById) {
+    res.sendStatus(404).json({ message: "Post not found" });
+  }
   res.json(resultPostById);
 });
 
@@ -75,14 +76,14 @@ app.patch("/posts/:id",(req,res) => {
   const id = parseInt(req.params.id);
   const searchIndex = posts.findIndex((post) => post.id === id);
   const updatePost = {
-    id: id,
     title: req.body.title || posts[searchIndex].title,
     content: req.body.content || posts[searchIndex].content,
     author: req.body.author || posts[searchIndex].author,
-    date: req.body.date || posts[searchIndex].date
   };
   posts[searchIndex] = updatePost;
-
+  if (searchIndex === -1) {
+    res.sendStatus(404).json({ message: "Post not found" });
+  }
   res.json(updatePost);
 });
 
@@ -90,6 +91,9 @@ app.patch("/posts/:id",(req,res) => {
 app.delete("/posts/:id",(req,res) => {
   const id = parseInt(req.params.id);
   const searchIndex = posts.findIndex((post) => post.id === id);
+  if (searchIndex === -1) {
+    res.sendStatus(404).json({ message: "not post to delet" });
+  }
   posts.splice(searchIndex,1);
 
   res.sendStatus(200);
