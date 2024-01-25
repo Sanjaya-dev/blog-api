@@ -39,12 +39,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-//CHALLENGE 1: GET All posts
+//GET All posts
 app.get("/all",(req,res) => {
   res.json(posts);
 })
 
-//CHALLENGE 2: GET a specific post by id
+//GET a specific post by id
 app.get("/posts/:id",(req,res) => {
   const id = parseInt(req.params.id);
   const searchIndex = posts.findIndex((post) => post.id === id);
@@ -53,19 +53,22 @@ app.get("/posts/:id",(req,res) => {
   res.json(resultPostById);
 })
 
-//CHALLENGE 3: POST a new post
+//POST a new post
 app.post("/post",(req,res) => {
+  const id = posts.length + 1;
   const objPost = {
     id: id,
     title: req.body.title,
     content: req.body.content,
-
-  }
+    date: req.body.date
+  };
+  
+  res.json(objPost);
 })
 
-//CHALLENGE 4: PATCH a post when you just want to update one parameter
+//PATCH a post when you just want to update one parameter
 
-//CHALLENGE 5: DELETE a specific post by providing the post id.
+//DELETE a specific post by providing the post id.
 
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
