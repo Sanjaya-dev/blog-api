@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 //GET All posts
-app.get("/all",(req,res) => {
+app.get("/posts",(req,res) => {
   res.json(posts);
 })
 
@@ -67,9 +67,28 @@ app.post("/post",(req,res) => {
 })
 
 //PATCH a post when you just want to update one parameter
+app.patch("/posts/:id",(req,res) => {
+  const id = parseInt(req.params.id);
+  const searchIndex = posts.findIndex((post) => post.id === id);
+  const updatePost = {
+    id: id,
+    title: req.body.title || posts[searchIndex].title,
+    content: req.body.content || posts[searchIndex].content,
+    date: req.body.date || posts[searchIndex].date
+  };
+  posts[searchIndex] = updatePost;
+
+  res.json(updatePost);
+})
 
 //DELETE a specific post by providing the post id.
+app.delete("/posts/:id",(req,res) => {
+  const id = parseInt(req.params.id);
+  const searchIndex = posts.findIndex((post) => post.id === id);
+  posts.slice(searchIndex,1);
 
+  res.sendStatus(200);
+})
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
 });
