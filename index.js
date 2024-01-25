@@ -51,20 +51,24 @@ app.get("/posts/:id",(req,res) => {
   const resultPostById = posts[searchIndex];
   
   res.json(resultPostById);
-})
+});
 
 //POST a new post
-app.post("/post",(req,res) => {
+app.post("/posts",(req,res) => {
   const id = posts.length + 1;
+  const date = new Date();
   const objPost = {
     id: id,
     title: req.body.title,
     content: req.body.content,
-    date: req.body.date
+    author: req.body.author,
+    date: date
   };
+
+  posts.push(objPost);
   
   res.json(objPost);
-})
+});
 
 //PATCH a post when you just want to update one parameter
 app.patch("/posts/:id",(req,res) => {
@@ -74,18 +78,19 @@ app.patch("/posts/:id",(req,res) => {
     id: id,
     title: req.body.title || posts[searchIndex].title,
     content: req.body.content || posts[searchIndex].content,
+    author: req.body.author || posts[searchIndex].author,
     date: req.body.date || posts[searchIndex].date
   };
   posts[searchIndex] = updatePost;
 
   res.json(updatePost);
-})
+});
 
 //DELETE a specific post by providing the post id.
 app.delete("/posts/:id",(req,res) => {
   const id = parseInt(req.params.id);
   const searchIndex = posts.findIndex((post) => post.id === id);
-  posts.slice(searchIndex,1);
+  posts.splice(searchIndex,1);
 
   res.sendStatus(200);
 })
